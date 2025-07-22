@@ -224,43 +224,6 @@
   <p id="statusMsg" style="margin-top: 1rem;"></p>
 </section>
 
-<script>
-document.getElementById("serviceRequestForm").addEventListener("submit", async function (e) {
-  e.preventDefault();
-
-  const form = e.target;
-  const data = {
-    nome: form.nome.value.trim(),
-    email: form.email.value.trim(),
-    telefone: form.telefone.value.trim(),
-    servico: form.servico.value,
-    descricao: form.descricao.value.trim()
-  };
-
-  const statusMsg = document.getElementById("statusMsg");
-  statusMsg.textContent = "Enviando...";
-
-  try {
-    const res = await fetch("https://script.google.com/macros/s/AKfycbzRziDIX85b7CRi4kXvLPOIPxSTmdtxS9rwXJ0Inu-ejx_fXjwSmU-mstWqc0luW5RYkA/exec", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-
-    if (res.ok) {
-      statusMsg.textContent = "✅ Formulário enviado com sucesso!";
-      form.reset();
-    } else {
-      statusMsg.textContent = "❌ Erro ao enviar. Tente novamente.";
-    }
-  } catch (error) {
-    console.error("Erro no envio:", error);
-    statusMsg.textContent = " ⏳ 📩 Enviando...";
-  }
-});
-</script>
-
-
   <footer>
     © 2025 Conecta Web · Seu negócio online, do seu jeito.
   </footer>
