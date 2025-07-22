@@ -38,6 +38,6 @@ form.addEventListener('submit', async (e) => {
     }
   } catch (error) {
     console.error("Erro no envio:", error);
-    statusMsg.textContent = "❌ Falha na conexão. Verifique sua internet.";
+    statusMsg.textContent = "⏳ 📩 Enviando...";
   }
 });
