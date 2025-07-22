@@ -1,72 +1,42 @@
 const form = document.getElementById('serviceRequestForm');
-const formMessage = document.getElementById('formMessage');
+const statusMsg = document.getElementById('statusMsg');
 
-form.addEventListener('submit', (e) => {
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  let valid = true;
+  statusMsg.textContent = '';
 
-  // Limpa mensagens anteriores
-  form.querySelectorAll('.error-message').forEach(span => span.textContent = '');
+  // Validação básica
+  const nome = form.nome.value.trim();
+  const email = form.email.value.trim();
+  const telefone = form.telefone.value.trim();
+  const servico = form.servico.value;
+  const descricao = form.descricao.value.trim();
 
-  // Valida campos obrigatórios
-  const nome = form.nome;
-  const email = form.email;
-  const servico = form.servico;
-
-  if (!nome.value.trim()) {
-    form.nome.nextElementSibling.textContent = 'Por favor, preencha seu nome.';
-    valid = false;
-  }
-
-  if (!email.value.trim() || !email.checkValidity()) {
-    form.email.nextElementSibling.textContent = 'Digite um e-mail válido.';
-    valid = false;
-  }
-
-  if (!servico.value) {
-    form.servico.nextElementSibling.textContent = 'Selecione um tipo de serviço.';
-    valid = false;
-  }
-
-  if (!valid) {
-    formMessage.textContent = '';
+  if (!nome || !email || !servico) {
+    statusMsg.textContent = "❌ Preencha os campos obrigatórios.";
     return;
   }
 
-  // Aqui você pode adicionar a integração real, por exemplo, AJAX para enviar o formulário
+  // Dados para enviar
+  const data = { nome, email, telefone, servico, descricao };
 
-  formMessage.style.color = 'green';
-  formMessage.textContent = 'Solicitação enviada com sucesso! Em breve entraremos em contato.';
-  form.reset();
-});
+  statusMsg.textContent = "⏳ Enviando...";
 
-document.getElementById("serviceRequestForm").addEventListener("submit", function (e) {
-  e.preventDefault();
+  try {
+    const res = await fetch("https://script.google.com/macros/s/AKfycbzRziDIX85b7CRi4kXvLPOIPxSTmdtxS9rwXJ0Inu-ejx_fXjwSmU-mstWqc0luW5RYkA/exec", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-  const form = e.target;
-  const data = new FormData(form);
-
-  fetch(form.action, {
-    method: "POST",
-    body: data
-  })
-  .then(response => response.text())
-  .then(result => {
-    const message = document.getElementById("formMessage");
-    if (result.trim() === "ok") {
-      message.textContent = "Solicitação enviada com sucesso!";
+    if (res.ok) {
+      statusMsg.textContent = "✅ Formulário enviado com sucesso!";
       form.reset();
     } else {
-      message.textContent = "Erro ao enviar. Tente novamente.";
+      statusMsg.textContent = "❌ Erro ao enviar. Tente novamente.";
     }
-  })
-  .catch(() => {
-    document.getElementById("formMessage").textContent = "Erro na conexão com o servidor.";
-  });
-});
-
-const res = await fetch("https://script.google.com/macros/s/AKf.../exec", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(obj)
+  } catch (err) {
+    console.error(err);
+    statusMsg.textContent = "❌ Falha na conexão. Verifique sua internet.";
+  }
 });
