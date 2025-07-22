@@ -1,9 +1,9 @@
 const form = document.getElementById('serviceRequestForm');
 const statusMsg = document.getElementById('statusMsg');
 
-form.addEventListener('submit', (e) => {
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  statusMsg.textContent = '';
+  statusMsg.textContent = "⏳ Enviando...";
 
   // Captura os dados
   const nome = form.nome.value.trim();
@@ -28,20 +28,16 @@ form.addEventListener('submit', (e) => {
     descricao
   });
 
-  statusMsg.textContent = "⏳ Enviando...";
-
-  // Envia os dados via GET
-  fetch(`${baseURL}?${params.toString()}`)
-    .then(response => {
-      if (response.ok) {
-        statusMsg.textContent = "✅ Formulário enviado com sucesso!";
-        form.reset();
-      } else {
-        statusMsg.textContent = "❌ Erro ao enviar. Tente novamente.";
-      }
-    })
-    .catch(error => {
-      console.error("Erro no envio:", error);
-      statusMsg.textContent = "❌ Falha na conexão. Verifique sua internet.";
-    });
+  try {
+    const response = await fetch(`${baseURL}?${params.toString()}`);
+    if (response.ok) {
+      statusMsg.textContent = "✅ Formulário enviado com sucesso!";
+      form.reset();
+    } else {
+      statusMsg.textContent = "❌ Erro ao enviar. Tente novamente.";
+    }
+  } catch (error) {
+    console.error("Erro no envio:", error);
+    statusMsg.textContent = "❌ Falha na conexão. Verifique sua internet.";
+  }
 });
