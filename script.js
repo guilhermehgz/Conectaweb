@@ -23,11 +23,12 @@ form.addEventListener('submit', async (e) => {
   statusMsg.textContent = "⏳ Enviando...";
 
   try {
-    const res = await fetch("https://script.google.com/macros/s/AKfycbzRziDIX85b7CRi4kXvLPOIPxSTmdtxS9rwXJ0Inu-ejx_fXjwSmU-mstWqc0luW5RYkA/exec", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+   const res = await fetch("https://script.google.com/macros/s/AKfycbx46dlmb9rdIgCdQX4eCDjeRCnyFjbH_o9X3NSeYF0QCy-PpUHmujAAEYO36id9gnDA/exec", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(data)
+});
+
 
     if (res.ok) {
       statusMsg.textContent = "✅ Formulário enviado com sucesso!";
